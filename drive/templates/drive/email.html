@@ -1,0 +1,36 @@
+{% extends "account/base.html" %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'drive/css/style.css' %}" type="text/css" />
+
+    <a href="https://myaccount.google.com/"><img src="{{picture}}" style="border-radius: 100px;"></a>
+    <div style="text-align:left">Hola {{name}},</div>
+    <br>
+    <div style="text-align:left">Has desactivado el uso compartido público de los siguientes archivos:</div>
+
+    <div style="padding-top:50px;">
+        <table class="files_table" border=1 frame=void rules=rows>
+            <thead>
+                <tr>
+                    <th colspan="2" width="80%">Archivo</th>
+                    <th width="10%">Creado</th>
+                    <th width="10%">Modificado</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for file in files %}
+                    <tr style="min-height: 24px;max-height: 24px;height:24px">
+                        <td width="3%">
+                            <img src="{{file.icon_url}}" width="16" height="16"/>
+                        </td>
+                        <td width="77%" style="text-align: left;"><a href="{{file.url}}" target="_blank">{{file.name}}</a></td>
+                        <td width="10%">{{file.created_time|date:"d/m/y"}}</td>
+                        <td width="10%">{{file.modified_time|date:"d/m/y"}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

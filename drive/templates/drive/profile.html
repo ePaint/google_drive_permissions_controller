@@ -1,0 +1,108 @@
+{% extends "account/base.html" %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'drive/css/style.css' %}" type="text/css" />
+
+    <button
+        class="btn btn-dark btn-lg"
+        style="display: none;position: fixed;bottom: 20px;right: 30px;z-index: 99;"
+        onclick="topFunction()"
+        id="goBack">🡅 Volver</button>
+
+    <a href="https://myaccount.google.com/"><img src="{{picture}}" style="border-radius: 100px;"></a>
+    <div>{{name}}</div>
+    <div>{{email}}</div>
+
+    <div style="padding-top:10px;">
+        <a href="{% url 'account_logout' %}"><button class="btn btn-secondary btn-sm" type="button">✕ Cerrar Sesión</button></a>
+    </div>
+
+    <form method="POST" action="/process/">
+        {% csrf_token %}
+        <div style="padding-top:50px;">
+            <span style="float:left;">
+                <button class="btn btn-primary btn-sm" onClick="setCheckbox(true)" type="button">✓</button>
+                <button class="btn btn-danger btn-sm" onClick="setCheckbox(false)" type="button">✗</button>
+            </span>
+            <span style="float:right;">
+                <a href="{% url 'archive' %}"><button class="btn btn-info btn-sm" type="button">📄 Historial</button></a>
+                <a href="{% url 'reload' %}"><button class="btn btn-warning btn-sm" type="button">📥 Recargar</button></a>
+                <input class="btn btn-success btn-sm" type="submit" value="⚡ Procesar">
+            </span>
+        </div>
+
+        <div style="padding-top:40px;">
+            <table class="files_table" border=1 frame=void rules=rows>
+                <thead>
+                    <tr>
+                        <th colspan="4" width="80%">Archivo</th>
+                        <th width="10%">Creado</th>
+                        <th width="10%">Modificado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                        <tr style="min-height: 24px;max-height: 24px;height:24px">
+                            <td width="3%">
+                                {% if file.public %}
+                                    <input class="check" type="checkbox" id="checkbox_{{file.id}}" name="checkbox_{{file.id}}">
+                                {% endif %}
+                            </td>
+                            <td width="3%">
+                                <div id="private_wrapper">
+                                    {% if file.public %}
+                                        <img src="{% static 'public.png' %}" width="16" height="16"/>
+                                        <p class="text">Archivo público</p>
+                                    {% else %}
+                                        <img src="{% static 'private.png' %}" width="16" height="16"/>
+                                        <p class="text">Archivo privado desde: {{file.processed_time|date:"d/m/y"}}</p>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td width="3%">
+                                <img src="{{file.icon_url}}" width="16" height="16"/>
+                            </td>
+                            <td width="71%" style="text-align: left;"><a href="{{file.url}}" target="_blank">{{file.name}}</a></td>
+                            <td width="10%">{{file.created_time|date:"d/m/y"}}</td>
+                            <td width="10%">{{file.modified_time|date:"d/m/y"}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    <div style="padding-top:100px">
+
+    </div>
+
+    <script>
+        function setCheckbox(value) {
+            var checkboxList = document.querySelectorAll('[id^="checkbox_"]');
+            checkboxList.forEach(cb => cb.checked = value);
+        }
+    </script>
+
+    <script>
+        //Get the button:
+        mybutton = document.getElementById("goBack");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+    </script>
+{% endblock %}

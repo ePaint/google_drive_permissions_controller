@@ -1,0 +1,68 @@
+th, td {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 11px;
+}
+
+th {
+    color: white;
+    background: #666666;
+    position: sticky;
+    top: 0;
+}
+
+tr {
+   min-height: 24px;
+   max-height: 24px;
+}
+
+.check {
+   height:18px;
+   width:18px;
+   vertical-align: middle;
+}
+
+.files_table {
+    font-size:11px;
+}
+
+#myBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+}
+
+#myBtn:hover {
+    background-color: #555; /* Add a dark-grey background on hover */
+}
+
+#private_wrapper {
+    position:relative;
+}
+
+#private_wrapper .text {
+    position:absolute;
+    z-index:100;
+    background-color:#FFFF99;
+    padding:3px;
+    top:20%;
+    left:20%;
+    max-width: 300px;
+    min-width: 90px;
+    white-space: normal;
+    text-overflow: ellipsis;
+    border: 1px solid #333333 ;
+    text-align: left;
+    font-size: 11px;
+
+    top: -1000000%;
+    display: block;
+    transition: top 0s step-end;
+}
+
+#private_wrapper:hover .text {
+    top: 100%;
+    transition: none;
+}

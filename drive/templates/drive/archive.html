@@ -1,0 +1,96 @@
+{% extends "account/base.html" %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'drive/css/style.css' %}" type="text/css" />
+
+    <button
+        class="btn btn-dark btn-lg"
+        style="display: none;position: fixed;bottom: 20px;right: 30px;z-index: 99;"
+        onclick="topFunction()"
+        id="goBack">🡅 Volver</button>
+
+    <a href="https://myaccount.google.com/"><img src="{{picture}}" style="border-radius: 100px;"></a>
+    <div>{{name}}</div>
+    <div>{{email}}</div>
+
+    <div style="padding-top:10px;">
+        <a href="{% url 'account_logout' %}"><button class="btn btn-secondary btn-sm" type="button">✕ Cerrar Sesión</button></a>
+    </div>
+
+    <div style="padding-top:50px;">
+        <span style="float:left;">
+            <a href="{% url 'profile' %}"><button class="btn btn-danger btn-sm" type="button">🡄 Volver</button></a>
+        </span>
+    </div>
+
+    <div style="padding-top:40px;">
+        <table class="files_table" border=1 frame=void rules=rows>
+            <thead>
+                <tr>
+                    <th colspan="3" width="70%">Archivo</th>
+                    <th width="10%">Creado</th>
+                    <th width="10%">Modificado</th>
+                    <th width="10%">Procesado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                    <tr style="min-height: 24px;max-height: 24px;height:24px">
+                        <td width="3%">
+                            <div id="private_wrapper">
+                                {% if record.file.public %}
+                                    <img src="{% static 'public.png' %}" width="16" height="16"/>
+                                    <p class="text">Archivo público</p>
+                                {% else %}
+                                    <img src="{% static 'private.png' %}" width="16" height="16"/>
+                                    <p class="text">Archivo privado desde: {{record.file.processed_time|date:"d/m/y"}}</p>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td width="3%">
+                            <img src="{{record.file.icon_url}}" width="16" height="16"/>
+                        </td>
+                        <td width="71%" style="text-align: left;"><a href="{{record.file.url}}" target="_blank">{{record.file.name}}</a></td>
+                        <td width="10%">{{record.file.created_time|date:"d/m/y"}}</td>
+                        <td width="10%">{{record.file.modified_time|date:"d/m/y"}}</td>
+                        <td width="10%">{{record.date|date:"d/m/y"}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="padding-top:100px">
+
+    </div>
+
+    <script>
+        function setCheckbox(value) {
+            var checkboxList = document.querySelectorAll('[id^="checkbox_"]');
+            checkboxList.forEach(cb => cb.checked = value);
+        }
+    </script>
+
+    <script>
+        //Get the button:
+        mybutton = document.getElementById("goBack");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+    </script>
+{% endblock %}
